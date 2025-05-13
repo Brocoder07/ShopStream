@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.example.ecommerce.ecommerce_backend.entity.User;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -25,6 +26,14 @@ import io.jsonwebtoken.security.SignatureException;
 @Component
 public class JwtUtil {
 
+    Dotenv dotenv = Dotenv.load();
+    String jwtSecret = dotenv.get("JWT_SECRET");
+    String jwtExpiration = dotenv.get("JWT_EXPIRATION");
+    // Use @Value to inject properties from application.properties
+    // @Value("${jwt.secret}")
+    // private String secret;
+    // @Value("${jwt.expiration}")
+    // private Long jwtExpirationMs;
     @Value("${jwt.secret}")
     private String secret;
 
