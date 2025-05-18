@@ -80,9 +80,9 @@ pipeline {
                             // This command is idempotent: it creates if not exists, updates if it does.
                             sh """
                                 kubectl create secret generic ${env.K8S_SECRET_NAME} \
-                                  --from-literal=SPRING_DATASOURCE_PASSWORD='${env.SPRING_DATASOURCE_PASSWORD}' \
-                                  --from-literal=POSTGRES_PASSWORD='${env.POSTGRES_PASSWORD}' \
-                                  --from-literal=JWT_SECRET='${env.JWT_SECRET}' \
+                                  --from-literal=SPRING_DATASOURCE_PASSWORD="${SPRING_DATASOURCE_PASSWORD}" \
+                                  --from-literal=POSTGRES_PASSWORD="${POSTGRES_PASSWORD}" \
+                                  --from-literal=JWT_SECRET="${JWT_SECRET}" \
                                   -n ${env.K8S_NAMESPACE} \
                                   --dry-run=client -o yaml | kubectl apply -f -
                             """
