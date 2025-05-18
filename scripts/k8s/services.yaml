@@ -18,10 +18,11 @@ metadata:
   name: shopstream-backend
   namespace: shopstream
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
   - port: 8080
     targetPort: 8080
+    nodePort: 30002
   selector:
     app: shopstream-backend
 ---
@@ -36,4 +37,4 @@ spec:
   - port: 5432
     targetPort: 5432
   selector:
-    app: shopstream-postgres 
+    app: shopstream-postgres
