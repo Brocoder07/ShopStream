@@ -26,6 +26,13 @@ pipeline {
         stage('Build & Push Frontend Image') {
             steps {
                 script {
+                    env.DOCKER_TLS_VERIFY = ''
+                    env.DOCKER_CERT_PATH = ''
+                    env.DOCKER_HOST = ''
+
+                    sh 'echo "--- Current Environment Variables ---"'
+                    sh 'env | sort' // Print all environment variables
+                    sh 'echo "--- End Environment Variables ---"'
                     def dockerfilePath = 'scripts/docker/frontend.Dockerfile'
                     def imageName = "${env.FRONTEND_IMAGE_NAME}:${env.BUILD_NUMBER}"
                     docker.withRegistry('https://docker.io', env.DOCKER_CREDENTIALS_ID) {
