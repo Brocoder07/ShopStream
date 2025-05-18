@@ -16,9 +16,6 @@ pipeline {
         POSTGRES_PASSWORD = "postgres-password"
         JWT_SECRET = "jwt-secret"
         K8S_SECRET_NAME = "shopstream-secrets"
-        DOCKER_HOST = '' 
-        DOCKER_TLS_VERIFY = ''
-        DOCKER_CERT_PATH = ''
     }
 
     stages {
@@ -26,18 +23,20 @@ pipeline {
         stage('Build & Push Frontend Image') {
             steps {
                 script {
-                    env.DOCKER_TLS_VERIFY = ''
-                    env.DOCKER_CERT_PATH = ''
-                    env.DOCKER_HOST = ''
-
-                    sh 'echo "--- Current Environment Variables ---"'
-                    sh 'env | sort' // Print all environment variables
-                    sh 'echo "--- End Environment Variables ---"'
                     def dockerfilePath = 'scripts/docker/frontend.Dockerfile'
                     def imageName = "${env.FRONTEND_IMAGE_NAME}:${env.BUILD_NUMBER}"
-                    docker.withRegistry('https://docker.io', env.DOCKER_CREDENTIALS_ID) {
-                        def customImage = docker.build(imageName, "--build-arg NEXT_PUBLIC_API_URL_ARG=${env.NEXT_PUBLIC_API_URL_BUILD_ARG} -f ${dockerfilePath} .")
-                        customImage.push()
+                    // Ensure the full image name includes the registry for clarity in the sh step
+                    def fullImageNameWithRegistry = "docker.io/${imageName}" 
+
+                    // Build the image first (this part seems to be working)
+                    docker.build(imageName, "--build-arg NEXT_PUBLIC_API_URL_ARG=${env.NEXT_PUBLIC_API_URL_BUILD_ARG} -f ${dockerfilePath} .")
+
+                    // Explicit login and push
+                    withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh "echo 'Attempting to login to Docker Hub...'"
+                        sh "echo \"${DOCKER_PASS}\" | docker login -u \"${DOCKER_USER}\" --password-stdin docker.io"
+                        echo "Attempting to push image: ${fullImageNameWithRegistry}"
+                        sh "docker push ${fullImageNameWithRegistry}"
                     }
                 }
             }
@@ -48,9 +47,15 @@ pipeline {
                 script {
                     def dockerfilePath = 'scripts/docker/backend.Dockerfile'
                     def imageName = "${env.BACKEND_IMAGE_NAME}:${env.BUILD_NUMBER}"
-                    docker.withRegistry('https://docker.io', env.DOCKER_CREDENTIALS_ID) {
-                        def customImage = docker.build(imageName, "-f ${dockerfilePath} .")
-                        customImage.push()
+                    def fullImageNameWithRegistry = "docker.io/${imageName}"
+
+                    docker.build(imageName, "-f ${dockerfilePath} .")
+
+                    withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh "echo 'Attempting to login to Docker Hub...'"
+                        sh "echo \"${DOCKER_PASS}\" | docker login -u \"${DOCKER_USER}\" --password-stdin docker.io"
+                        echo "Attempting to push image: ${fullImageNameWithRegistry}"
+                        sh "docker push ${fullImageNameWithRegistry}"
                     }
                 }
             }
