@@ -16,6 +16,9 @@ pipeline {
         POSTGRES_PASSWORD = "postgres-password"
         JWT_SECRET = "jwt-secret"
         K8S_SECRET_NAME = "shopstream-secrets"
+        DOCKER_HOST = '' 
+        DOCKER_TLS_VERIFY = ''
+        DOCKER_CERT_PATH = ''
     }
 
     stages {
