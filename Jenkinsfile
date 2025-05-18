@@ -19,11 +19,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/Brocoder07/ShopStream.git'
-            }
-        }
 
         stage('Build & Push Frontend Image') {
             steps {
