@@ -63,7 +63,7 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                withKubeconfig([credentialsId: env.KUBECONFIG_CREDENTIALS_ID]) {
+                withKubeConfig([credentialsId: env.KUBECONFIG_CREDENTIALS_ID]) {
                     // Access the secret text credentials
                     withCredentials([
                         string(credentialsId: env.SPRING_DATASOURCE_PASSWORD, variable: 'SPRING_DATASOURCE_PASSWORD'),
