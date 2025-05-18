@@ -26,9 +26,9 @@ import io.jsonwebtoken.security.SignatureException;
 @Component
 public class JwtUtil {
 
-    Dotenv dotenv = Dotenv.load();
-    String jwtSecret = dotenv.get("JWT_SECRET");
-    String jwtExpiration = dotenv.get("JWT_EXPIRATION");
+//    Dotenv dotenv = Dotenv.load();
+//    String jwtSecret = dotenv.get("JWT_SECRET");
+//    String jwtExpiration = dotenv.get("JWT_EXPIRATION");
     // Use @Value to inject properties from application.properties
     // @Value("${jwt.secret}")
     // private String secret;

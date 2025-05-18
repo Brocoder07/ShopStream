@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopstream-backend
+  namespace: shopstream
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shopstream-backend
+  template:
+    metadata:
+      labels:
+        app: shopstream-backend
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+      - name: backend
+        image: akashrajeshnair/shopstream-backend:latest
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: shopstream-config
+        - secretRef:
+            name: shopstream-secrets
+        env:
+        - name: SPRING_CORS_ALLOWED_ORIGINS
+          value: "http://localhost:3000,http://localhost:30000,http://shopstream-frontend:3000,http://shopstream-frontend.shopstream.svc.cluster.local:3000,http://192.168.49.2:30000"
+        - name: SPRING_CORS_ALLOWED_METHODS
+          value: "GET,POST,PUT,DELETE,OPTIONS,PATCH"
+        - name: SPRING_CORS_ALLOWED_HEADERS
+          value: "Authorization,Content-Type,X-Requested-With,Accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers"
+        - name: SPRING_CORS_ALLOW_CREDENTIALS
+          value: "true"
+        - name: SPRING_CORS_MAX_AGE
+          value: "3600"
+        - name: SERVER_SERVLET_CONTEXT_PATH
+          value: "/api"
+        - name: SPRING_CORS_EXPOSED_HEADERS
+          value: "Authorization,Content-Type"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "300m"
+          limits:
+            memory: "1Gi"
+            cpu: "800m" 

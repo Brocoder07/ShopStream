@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  shopstream-frontend:
+    image: akashrajeshnair/shopstream-frontend:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8080
+    depends_on:
+      - shopstream-backend
+    networks:
+      - shopstream-network
+
+  shopstream-backend:
+    image: akashrajeshnair/shopstream-backend:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/ecommerce
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      - postgres
+    networks:
+      - shopstream-network
+
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=ecommerce
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - shopstream-network
+
+networks:
+  shopstream-network:
+    driver: bridge
+
+volumes:
+  postgres_data: 

@@ -1,7 +1,9 @@
 package com.example.ecommerce.ecommerce_backend.config;
 
+import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,11 +24,25 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.example.ecommerce.ecommerce_backend.security.JwtAuthenticationFilter;
 
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+    @Value("${spring.cors.allowed-origins:http://localhost:3000}")
+    private String allowedOrigins;
+
+    @Value("${spring.cors.allowed-methods:GET,POST,PUT,DELETE,OPTIONS}")
+    private String allowedMethods;
+
+    @Value("${spring.cors.allowed-headers:*}")
+    private String allowedHeaders;
+
+    @Value("${spring.cors.allow-credentials:true}")
+    private boolean allowCredentials;
+
+    @Value("${spring.cors.max-age:3600}")
+    private long maxAge;
+
     @Bean
     public SecurityFilterChain securityFilterChain(
         HttpSecurity http,
@@ -38,10 +54,11 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/api/auth/**",
+                    "/auth/**",
                     "/api/products/**",
                     "/api-docs/**",
-                    "/swagger-ui/**"
+                    "/swagger-ui/**",
+                    "/api/health"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
@@ -57,21 +74,24 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Your frontend URL
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
+        configuration.setAllowedMethods(Arrays.asList(allowedMethods.split(",")));
+        configuration.setAllowedHeaders(Arrays.asList(allowedHeaders.split(",")));
+        configuration.setAllowCredentials(allowCredentials);
+        configuration.setMaxAge(maxAge);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
     @Bean
     public AuthenticationManager authenticationManager(
         AuthenticationConfiguration config
     ) throws Exception {
         return config.getAuthenticationManager();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

@@ -34,3 +34,35 @@ build/
 
 # .gitignore
 .env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Secrets and keys
+*.pem
+*.key
+*.crt
+*.cer
+*.der
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# Application specific
+application-*.yml
+application-*.properties
+!application-example.yml
+!application-example.properties
+
+# Cache and temp files
+*.cache
+*.tmp
+*.temp
+.cache/
+.temp/
+
+secrets.yaml

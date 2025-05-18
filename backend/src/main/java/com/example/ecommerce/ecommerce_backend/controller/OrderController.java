@@ -7,12 +7,8 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.ecommerce.ecommerce_backend.entity.Order;
 import com.example.ecommerce.ecommerce_backend.entity.OrderItem;
@@ -34,6 +30,7 @@ public class OrderController {
     private final ProductRepository productRepository;
 
     @PostMapping("/place")
+    @Transactional
     public ResponseEntity<?> placeOrder(@RequestBody Map<String, Integer> cart, Authentication authentication) {
         User user = userRepository.findByEmail(authentication.getName()).orElseThrow();
         List<OrderItem> items = new ArrayList<>();
@@ -62,12 +59,14 @@ public class OrderController {
     }
 
     @GetMapping("/my")
+    @Transactional(readOnly = true)
     public ResponseEntity<?> getMyOrders(Authentication authentication) {
         User user = userRepository.findByEmail(authentication.getName()).orElseThrow();
         return ResponseEntity.ok(orderRepository.findByUser(user));
     }
 
     @GetMapping("/{id}")
+    @Transactional(readOnly = true)
     public ResponseEntity<?> getOrderDetails(@PathVariable Long id, Authentication authentication) {
         Order order = orderRepository.findById(id).orElseThrow();
         if (!order.getUser().getEmail().equals(authentication.getName())) {
@@ -76,6 +75,7 @@ public class OrderController {
         return ResponseEntity.ok(order);
     }
     @GetMapping("/all")
+    @Transactional(readOnly = true)
     public ResponseEntity<?> getAllOrders() {
         return ResponseEntity.ok(orderRepository.findAll());
     }

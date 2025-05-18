@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shopstream-config
+  namespace: shopstream
+data:
+  NEXT_PUBLIC_API_URL: "http://shopstream-backend:8080/api"
+  SPRING_PROFILES_ACTIVE: "prod"
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://shopstream-postgres:5432/ecommerce"
+  SPRING_DATASOURCE_USERNAME: "postgres"
+  POSTGRES_DB: "ecommerce"
+  POSTGRES_USER: "postgres" 
