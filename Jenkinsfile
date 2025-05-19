@@ -12,6 +12,7 @@ pipeline {
         NEXT_PUBLIC_API_URL_BUILD_ARG = "http://${MINIKUBE_IP}:30002/api"
 
         // Jenkins Credential IDs for your Kubernetes secrets
+        // test
         SPRING_DATASOURCE_PASSWORD = "spring-datasource-password"
         POSTGRES_PASSWORD = "postgres-password"
         JWT_SECRET = "jwt-secret"
