@@ -25,9 +25,22 @@ spec:
         envFrom:
         - configMapRef:
             name: shopstream-config
-        - secretRef:
-            name: shopstream-secrets
         env:
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: shopstream-secrets
+              key: SPRING_DATASOURCE_PASSWORD
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: shopstream-secrets
+              key: POSTGRES_PASSWORD
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: shopstream-secrets
+              key: JWT_SECRET
         - name: SPRING_CORS_ALLOWED_ORIGINS
           value: "http://localhost:3000,http://localhost:30000,http://shopstream-frontend:3000,http://shopstream-frontend.shopstream.svc.cluster.local:3000,http://192.168.49.2:30000"
         - name: SPRING_CORS_ALLOWED_METHODS
