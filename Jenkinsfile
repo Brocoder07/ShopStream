@@ -86,7 +86,7 @@ pipeline {
                                   -n ${env.K8S_NAMESPACE} \
                                   --dry-run=client -o yaml | kubectl apply -f -
                             """
-                            sh sh "kubectl get secret ${env.K8S_SECRET_NAME} -n ${env.K8S_NAMESPACE} -o yaml"
+                            sh "kubectl get secret ${env.K8S_SECRET_NAME} -n ${env.K8S_NAMESPACE} -o yaml"
 
                             sh "kubectl apply -f scripts/k8s/postgres-pvc.yaml"
                             sh "kubectl apply -f scripts/k8s/services.yaml"
