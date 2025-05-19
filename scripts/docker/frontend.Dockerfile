@@ -12,6 +12,9 @@ RUN npm ci
 # Copy the rest of the application
 COPY frontend/ .
 
+ARG NEXT_PUBLIC_API_URL_ARG
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL_ARG
+
 # Build the application
 RUN npm run build
 
