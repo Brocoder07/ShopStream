@@ -98,6 +98,8 @@ pipeline {
                             sh "kubectl set image deployment/shopstream-frontend frontend=${frontendFullImage} -n ${env.K8S_NAMESPACE}"
                             sh "kubectl set image deployment/shopstream-backend backend=${backendFullImage} -n ${env.K8S_NAMESPACE}"
 
+                            sh "kubectl rollout restart deployment/shopstream-backend -n ${env.K8S_NAMESPACE}"
+
                             sh "kubectl rollout status deployment/shopstream-frontend -n ${env.K8S_NAMESPACE} --timeout=120s"
                             sh "kubectl rollout status deployment/shopstream-backend -n ${env.K8S_NAMESPACE} --timeout=120s"
                         }
