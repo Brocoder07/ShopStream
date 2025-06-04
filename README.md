@@ -20,10 +20,17 @@ through secure REST APIs, ensuring smooth e-commerce operations.
 ● Automated workflows using Jenkins streamline testing, building, and deployment, minimizing manual errors and downtime.
 
 Programming Languages and Tools Used:
+
 ● Frontend: React.js, Next.js, TypeScript
+
 ● Backend: Spring Boot (Java), Hibernate
+
 Database: PostgreSQL
+
 CI/CD: Jenkins, Docker, Kubernetes, Minikube
+
 Containerization: Docker (images for backend/frontend)
+
 Orchestration & Deployment: Kubernetes cluster (Minikube local environment)
+
 IDEs used: Vscode, IntelliJ IDEA.
