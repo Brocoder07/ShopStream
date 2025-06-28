@@ -96,6 +96,10 @@ pipeline {
                             def frontendFullImage = "${env.FRONTEND_IMAGE_NAME}:${env.BUILD_NUMBER}"
                             def backendFullImage = "${env.BACKEND_IMAGE_NAME}:${env.BUILD_NUMBER}"
 
+                            sh "kubectl apply -f scripts/k8s/frontend-deployment.yaml"
+                            sh "kubectl apply -f scripts/k8s/backend-deployment.yaml"
+
+
                             sh "kubectl set image deployment/shopstream-frontend frontend=${frontendFullImage} -n ${env.K8S_NAMESPACE}"
                             sh "kubectl set image deployment/shopstream-backend backend=${backendFullImage} -n ${env.K8S_NAMESPACE}"
 
