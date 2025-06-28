@@ -34,3 +34,5 @@ Containerization: Docker (images for backend/frontend)
 Orchestration & Deployment: Kubernetes cluster (Minikube local environment)
 
 IDEs used: Vscode, IntelliJ IDEA.
+
+test
