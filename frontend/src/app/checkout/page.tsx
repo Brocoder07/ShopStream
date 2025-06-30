@@ -42,7 +42,11 @@ interface OrderResponse {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, totalAmount, clearCart } = useCartStore();
+  const { items, clearCart } = useCartStore();
+  const totalAmount = items.reduce(
+    (sum, item) => sum + (item.product.price * item.quantity),
+    0
+  );
   const { user, token, initialize, setAuth } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
